@@ -1,0 +1,54 @@
+========== dispatch will ==========
+
+maintain a set of 3 instructions decoded and ready to be dispatched
+
+dispatch as many instructions as it can on each cycle, dictated by lsq rob and rs
+
+if no insts are ready to be decoded dispatch will dispatch what it has and stall until more valid instructions 
+
+outputs should also be in order, if dispatching multiple insts, fetch1 will be the oldest
+
+output needs to be 
+
+INST 
+source regs
+dest reg
+opcode
+
+as a dispatch out packet, and can do up to 3 of these a cycle
+
+========== dispatch expects ==========
+
+inputs fetch1 fetch2 fetch3 are in order (ie fetch1 is the oldest or has the lowest pc)
+
+inputs are just 32 bit numbers from whatever memory source we use
+
+the open spots in rob rs and lsq indicate how many instructions could be taken in next cycle
+
+========== Basic Structure ==========
+
+COMBINATIONALLY:
+
+pass input 32 bit nums through decoder that ouputs INST data types as well as destreg, source regs, and opcode.
+
+determine number of instructions that we can dispatch (numdisp)
+
+SEQUENTIALLY:
+
+dispatch numdisp instructions from fifo, freeing their places in the fifo as they are dispatched
+
+put decoded insts into fifo at open spots
+
+========== TO DO ==========
+
+( ) make FIFO module
+( ) make BetterDecode module using given decoder 
+( ) integrate into dispatch
+( ) prepare testbench
+( ) test/debug
+
+
+
+//useful for better decode
+assign id_packet.dest_reg_idx = (has_dest_reg) ? if_id_reg.inst.r.rd : `ZERO_REG;
+
